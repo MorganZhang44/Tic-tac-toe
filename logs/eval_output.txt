@@ -1,0 +1,30 @@
+
+=======================================================
+  COMP0215 — DQN Agent Evaluation
+=======================================================
+[Agent] Loaded checkpoint ← weights/model_weights.pth
+
+  ── Agent (X) vs Random (O) — 2000 games ──
+     Games  : 2000
+     Wins   : 1793  (89.6%)
+     Draws  : 199  (10.0%)
+     Losses : 8  (0.4%)
+
+  ── Agent (O) vs Random (X) — 2000 games ──
+     Games  : 2000
+     Wins   : 1635  (81.8%)
+     Draws  : 333  (16.7%)
+     Losses : 32  (1.6%)
+
+  ── Combined (both sides) ──
+     Wins   : 3428/4000  (85.7%)
+     Draws  : 532/4000  (13.3%)
+     Losses : 40/4000  (1.0%)
+[Agent] Loaded checkpoint ← weights/model_weights.pth
+
+  ── Agent vs Itself — 1000 games ──
+     Games  : 1000
+     Wins   : 0  (0.0%)
+     Draws  : 1000  (100.0%)
+     Losses : 0  (0.0%)
+

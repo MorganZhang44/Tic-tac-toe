@@ -1,0 +1,148 @@
+
+============================================================
+  COMP0215 RL Coursework — Connect-4 4x4 DQN Training
+============================================================
+  Episodes  : 20000
+  Device    : cpu
+  Smoke test: False
+============================================================
+
+[Train] Starting fresh training (use --resume to continue from checkpoint).
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep    200/20000 | ε=0.496 | loss=0.0223 | win_vs_random=36.00% | best=36.00% | elapsed=2s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep    400/20000 | ε=0.244 | loss=0.0170 | win_vs_random=46.00% | best=46.00% | elapsed=4s
+  Ep    600/20000 | ε=0.121 | loss=0.0180 | win_vs_random=44.00% | best=46.00% | elapsed=7s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep    800/20000 | ε=0.060 | loss=0.0185 | win_vs_random=48.00% | best=48.00% | elapsed=9s
+  [Train] Updated frozen opponent at episode 1000
+  Ep   1000/20000 | ε=0.050 | loss=0.0182 | win_vs_random=46.00% | best=48.00% | elapsed=11s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   1200/20000 | ε=0.050 | loss=0.0148 | win_vs_random=63.00% | best=63.00% | elapsed=14s
+  Ep   1400/20000 | ε=0.050 | loss=0.0159 | win_vs_random=45.00% | best=63.00% | elapsed=16s
+  Ep   1600/20000 | ε=0.050 | loss=0.0157 | win_vs_random=60.00% | best=63.00% | elapsed=18s
+  Ep   1800/20000 | ε=0.050 | loss=0.0146 | win_vs_random=56.00% | best=63.00% | elapsed=21s
+  [Train] Updated frozen opponent at episode 2000
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   2000/20000 | ε=0.050 | loss=0.0134 | win_vs_random=68.00% | best=68.00% | elapsed=23s
+  Ep   2200/20000 | ε=0.050 | loss=0.0124 | win_vs_random=68.00% | best=68.00% | elapsed=26s
+  Ep   2400/20000 | ε=0.050 | loss=0.0179 | win_vs_random=60.00% | best=68.00% | elapsed=28s
+  Ep   2600/20000 | ε=0.050 | loss=0.0121 | win_vs_random=56.00% | best=68.00% | elapsed=30s
+  Ep   2800/20000 | ε=0.050 | loss=0.0151 | win_vs_random=60.00% | best=68.00% | elapsed=33s
+  [Train] Updated frozen opponent at episode 3000
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   3000/20000 | ε=0.050 | loss=0.0188 | win_vs_random=78.00% | best=78.00% | elapsed=35s
+  Ep   3200/20000 | ε=0.050 | loss=0.0125 | win_vs_random=75.00% | best=78.00% | elapsed=37s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   3400/20000 | ε=0.050 | loss=0.0151 | win_vs_random=80.00% | best=80.00% | elapsed=40s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   3600/20000 | ε=0.050 | loss=0.0151 | win_vs_random=83.00% | best=83.00% | elapsed=42s
+  Ep   3800/20000 | ε=0.050 | loss=0.0123 | win_vs_random=75.00% | best=83.00% | elapsed=44s
+  [Train] Updated frozen opponent at episode 4000
+  Ep   4000/20000 | ε=0.050 | loss=0.0139 | win_vs_random=79.00% | best=83.00% | elapsed=46s
+  Ep   4200/20000 | ε=0.050 | loss=0.0146 | win_vs_random=80.00% | best=83.00% | elapsed=48s
+  Ep   4400/20000 | ε=0.050 | loss=0.0162 | win_vs_random=78.00% | best=83.00% | elapsed=51s
+  Ep   4600/20000 | ε=0.050 | loss=0.0135 | win_vs_random=82.00% | best=83.00% | elapsed=53s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   4800/20000 | ε=0.050 | loss=0.0139 | win_vs_random=86.00% | best=86.00% | elapsed=55s
+  [Train] Updated frozen opponent at episode 5000
+  Ep   5000/20000 | ε=0.050 | loss=0.0134 | win_vs_random=83.00% | best=86.00% | elapsed=57s
+  Ep   5200/20000 | ε=0.050 | loss=0.0137 | win_vs_random=86.00% | best=86.00% | elapsed=59s
+  Ep   5400/20000 | ε=0.050 | loss=0.0153 | win_vs_random=85.00% | best=86.00% | elapsed=62s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   5600/20000 | ε=0.050 | loss=0.0136 | win_vs_random=87.00% | best=87.00% | elapsed=64s
+  Ep   5800/20000 | ε=0.050 | loss=0.0151 | win_vs_random=83.00% | best=87.00% | elapsed=66s
+  [Train] Updated frozen opponent at episode 6000
+  Ep   6000/20000 | ε=0.050 | loss=0.0138 | win_vs_random=85.00% | best=87.00% | elapsed=68s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   6200/20000 | ε=0.050 | loss=0.0137 | win_vs_random=91.00% | best=91.00% | elapsed=70s
+  Ep   6400/20000 | ε=0.050 | loss=0.0144 | win_vs_random=88.00% | best=91.00% | elapsed=73s
+  Ep   6600/20000 | ε=0.050 | loss=0.0135 | win_vs_random=87.00% | best=91.00% | elapsed=75s
+  Ep   6800/20000 | ε=0.050 | loss=0.0149 | win_vs_random=86.00% | best=91.00% | elapsed=77s
+  [Train] Updated frozen opponent at episode 7000
+  Ep   7000/20000 | ε=0.050 | loss=0.0121 | win_vs_random=87.00% | best=91.00% | elapsed=79s
+  Ep   7200/20000 | ε=0.050 | loss=0.0140 | win_vs_random=78.00% | best=91.00% | elapsed=81s
+  Ep   7400/20000 | ε=0.050 | loss=0.0124 | win_vs_random=83.00% | best=91.00% | elapsed=84s
+  Ep   7600/20000 | ε=0.050 | loss=0.0131 | win_vs_random=78.00% | best=91.00% | elapsed=86s
+  Ep   7800/20000 | ε=0.050 | loss=0.0127 | win_vs_random=82.00% | best=91.00% | elapsed=88s
+  [Train] Updated frozen opponent at episode 8000
+  Ep   8000/20000 | ε=0.050 | loss=0.0101 | win_vs_random=83.00% | best=91.00% | elapsed=90s
+  Ep   8200/20000 | ε=0.050 | loss=0.0127 | win_vs_random=85.00% | best=91.00% | elapsed=92s
+  Ep   8400/20000 | ε=0.050 | loss=0.0113 | win_vs_random=80.00% | best=91.00% | elapsed=95s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep   8600/20000 | ε=0.050 | loss=0.0141 | win_vs_random=93.00% | best=93.00% | elapsed=97s
+  Ep   8800/20000 | ε=0.050 | loss=0.0106 | win_vs_random=84.00% | best=93.00% | elapsed=99s
+  [Train] Updated frozen opponent at episode 9000
+  Ep   9000/20000 | ε=0.050 | loss=0.0105 | win_vs_random=91.00% | best=93.00% | elapsed=101s
+  Ep   9200/20000 | ε=0.050 | loss=0.0102 | win_vs_random=81.00% | best=93.00% | elapsed=104s
+  Ep   9400/20000 | ε=0.050 | loss=0.0104 | win_vs_random=90.00% | best=93.00% | elapsed=106s
+  Ep   9600/20000 | ε=0.050 | loss=0.0117 | win_vs_random=91.00% | best=93.00% | elapsed=108s
+  Ep   9800/20000 | ε=0.050 | loss=0.0103 | win_vs_random=90.00% | best=93.00% | elapsed=110s
+  [Train] Updated frozen opponent at episode 10000
+  Ep  10000/20000 | ε=0.050 | loss=0.0120 | win_vs_random=80.00% | best=93.00% | elapsed=112s
+  Ep  10200/20000 | ε=0.050 | loss=0.0087 | win_vs_random=89.00% | best=93.00% | elapsed=115s
+  Ep  10400/20000 | ε=0.050 | loss=0.0096 | win_vs_random=90.00% | best=93.00% | elapsed=117s
+  Ep  10600/20000 | ε=0.050 | loss=0.0127 | win_vs_random=92.00% | best=93.00% | elapsed=119s
+  Ep  10800/20000 | ε=0.050 | loss=0.0091 | win_vs_random=89.00% | best=93.00% | elapsed=122s
+  [Train] Updated frozen opponent at episode 11000
+  Ep  11000/20000 | ε=0.050 | loss=0.0102 | win_vs_random=87.00% | best=93.00% | elapsed=124s
+  Ep  11200/20000 | ε=0.050 | loss=0.0091 | win_vs_random=87.00% | best=93.00% | elapsed=126s
+  Ep  11400/20000 | ε=0.050 | loss=0.0099 | win_vs_random=87.00% | best=93.00% | elapsed=128s
+[Agent] Saved checkpoint → weights/model_weights.pth
+  Ep  11600/20000 | ε=0.050 | loss=0.0101 | win_vs_random=94.00% | best=94.00% | elapsed=130s
+  Ep  11800/20000 | ε=0.050 | loss=0.0094 | win_vs_random=79.00% | best=94.00% | elapsed=132s
+  [Train] Updated frozen opponent at episode 12000
+  Ep  12000/20000 | ε=0.050 | loss=0.0099 | win_vs_random=91.00% | best=94.00% | elapsed=135s
+  Ep  12200/20000 | ε=0.050 | loss=0.0103 | win_vs_random=85.00% | best=94.00% | elapsed=137s
+  Ep  12400/20000 | ε=0.050 | loss=0.0095 | win_vs_random=77.00% | best=94.00% | elapsed=139s
+  Ep  12600/20000 | ε=0.050 | loss=0.0091 | win_vs_random=70.00% | best=94.00% | elapsed=141s
+  Ep  12800/20000 | ε=0.050 | loss=0.0093 | win_vs_random=83.00% | best=94.00% | elapsed=144s
+  [Train] Updated frozen opponent at episode 13000
+  Ep  13000/20000 | ε=0.050 | loss=0.0098 | win_vs_random=82.00% | best=94.00% | elapsed=146s
+  Ep  13200/20000 | ε=0.050 | loss=0.0089 | win_vs_random=94.00% | best=94.00% | elapsed=148s
+  Ep  13400/20000 | ε=0.050 | loss=0.0111 | win_vs_random=91.00% | best=94.00% | elapsed=151s
+  Ep  13600/20000 | ε=0.050 | loss=0.0106 | win_vs_random=90.00% | best=94.00% | elapsed=153s
+  Ep  13800/20000 | ε=0.050 | loss=0.0086 | win_vs_random=93.00% | best=94.00% | elapsed=155s
+  [Train] Updated frozen opponent at episode 14000
+  Ep  14000/20000 | ε=0.050 | loss=0.0087 | win_vs_random=82.00% | best=94.00% | elapsed=157s
+  Ep  14200/20000 | ε=0.050 | loss=0.0085 | win_vs_random=94.00% | best=94.00% | elapsed=159s
+  Ep  14400/20000 | ε=0.050 | loss=0.0074 | win_vs_random=84.00% | best=94.00% | elapsed=161s
+  Ep  14600/20000 | ε=0.050 | loss=0.0104 | win_vs_random=85.00% | best=94.00% | elapsed=164s
+  Ep  14800/20000 | ε=0.050 | loss=0.0117 | win_vs_random=85.00% | best=94.00% | elapsed=166s
+  [Train] Updated frozen opponent at episode 15000
+  Ep  15000/20000 | ε=0.050 | loss=0.0096 | win_vs_random=88.00% | best=94.00% | elapsed=168s
+  Ep  15200/20000 | ε=0.050 | loss=0.0104 | win_vs_random=83.00% | best=94.00% | elapsed=170s
+  Ep  15400/20000 | ε=0.050 | loss=0.0099 | win_vs_random=84.00% | best=94.00% | elapsed=172s
+  Ep  15600/20000 | ε=0.050 | loss=0.0088 | win_vs_random=84.00% | best=94.00% | elapsed=174s
+  Ep  15800/20000 | ε=0.050 | loss=0.0088 | win_vs_random=91.00% | best=94.00% | elapsed=177s
+  [Train] Updated frozen opponent at episode 16000
+  Ep  16000/20000 | ε=0.050 | loss=0.0078 | win_vs_random=85.00% | best=94.00% | elapsed=179s
+  Ep  16200/20000 | ε=0.050 | loss=0.0086 | win_vs_random=86.00% | best=94.00% | elapsed=181s
+  Ep  16400/20000 | ε=0.050 | loss=0.0083 | win_vs_random=84.00% | best=94.00% | elapsed=183s
+  Ep  16600/20000 | ε=0.050 | loss=0.0088 | win_vs_random=86.00% | best=94.00% | elapsed=185s
+  Ep  16800/20000 | ε=0.050 | loss=0.0093 | win_vs_random=91.00% | best=94.00% | elapsed=187s
+  [Train] Updated frozen opponent at episode 17000
+  Ep  17000/20000 | ε=0.050 | loss=0.0100 | win_vs_random=88.00% | best=94.00% | elapsed=189s
+  Ep  17200/20000 | ε=0.050 | loss=0.0076 | win_vs_random=87.00% | best=94.00% | elapsed=191s
+  Ep  17400/20000 | ε=0.050 | loss=0.0094 | win_vs_random=86.00% | best=94.00% | elapsed=194s
+  Ep  17600/20000 | ε=0.050 | loss=0.0093 | win_vs_random=88.00% | best=94.00% | elapsed=196s
+  Ep  17800/20000 | ε=0.050 | loss=0.0099 | win_vs_random=84.00% | best=94.00% | elapsed=198s
+  [Train] Updated frozen opponent at episode 18000
+  Ep  18000/20000 | ε=0.050 | loss=0.0093 | win_vs_random=91.00% | best=94.00% | elapsed=200s
+  Ep  18200/20000 | ε=0.050 | loss=0.0093 | win_vs_random=90.00% | best=94.00% | elapsed=202s
+  Ep  18400/20000 | ε=0.050 | loss=0.0113 | win_vs_random=87.00% | best=94.00% | elapsed=204s
+  Ep  18600/20000 | ε=0.050 | loss=0.0082 | win_vs_random=87.00% | best=94.00% | elapsed=206s
+  Ep  18800/20000 | ε=0.050 | loss=0.0067 | win_vs_random=77.00% | best=94.00% | elapsed=209s
+  [Train] Updated frozen opponent at episode 19000
+  Ep  19000/20000 | ε=0.050 | loss=0.0076 | win_vs_random=85.00% | best=94.00% | elapsed=211s
+  Ep  19200/20000 | ε=0.050 | loss=0.0089 | win_vs_random=86.00% | best=94.00% | elapsed=213s
+  Ep  19400/20000 | ε=0.050 | loss=0.0082 | win_vs_random=91.00% | best=94.00% | elapsed=215s
+  Ep  19600/20000 | ε=0.050 | loss=0.0087 | win_vs_random=90.00% | best=94.00% | elapsed=217s
+  Ep  19800/20000 | ε=0.050 | loss=0.0074 | win_vs_random=92.00% | best=94.00% | elapsed=219s
+  [Train] Updated frozen opponent at episode 20000
+  Ep  20000/20000 | ε=0.050 | loss=0.0082 | win_vs_random=93.00% | best=94.00% | elapsed=221s
+[Agent] Saved checkpoint → weights/model_weights.pth
+
+[Train] Done! Best win-rate vs random: 94.00%
+[Train] Weights → weights/model_weights.pth
+[Train] Log     → logs/training_log.csv
