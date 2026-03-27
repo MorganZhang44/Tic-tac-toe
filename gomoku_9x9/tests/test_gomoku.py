@@ -11,7 +11,7 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from gomoku.gomoku9x9 import Gomoku9x9, RandomAgent
+from core.gomoku9x9 import Gomoku9x9, RandomAgent
 
 
 class TestGomokuBoard:

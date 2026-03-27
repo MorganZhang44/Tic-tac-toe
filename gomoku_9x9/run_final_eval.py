@@ -5,13 +5,13 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 from evaluate_gomoku import run_match
-from gomoku.dqn_agent_gomoku import GomokuDQNAgent
-from gomoku.gomoku9x9 import RandomAgent, SmartAgent
+from core.dqn_agent_gomoku import GomokuDQNAgent
+from core.gomoku9x9 import RandomAgent, SmartAgent
 
 def main():
     print("Loading V3 Hybrid Adversarial Agent...")
     agent = GomokuDQNAgent(device="cpu") # Eval is fast enough on CPU
-    weight_path = os.path.join("weights", "gomoku_weights.pth")
+    weight_path = os.path.join("weights", "model_weights.pth")
     agent.load(weight_path)
     agent.policy_net.eval()
     

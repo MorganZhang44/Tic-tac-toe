@@ -21,8 +21,8 @@ import time
 import numpy as np
 import torch
 
-from gomoku.gomoku9x9 import Gomoku9x9, RandomAgent, SmartAgent
-from gomoku.dqn_agent_gomoku import GomokuDQNAgent
+from core.gomoku9x9 import Gomoku9x9, RandomAgent, SmartAgent
+from core.dqn_agent_gomoku import GomokuDQNAgent
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -159,7 +159,7 @@ def train(args):
     agent1 = GomokuDQNAgent()
     agent2 = GomokuDQNAgent()   # frozen opponent
 
-    weights_path = os.path.join("weights", "gomoku_weights.pth")
+    weights_path = os.path.join("weights", "model_weights.pth")
     if args.resume and os.path.exists(weights_path):
         agent1.load(weights_path)
         agent2.policy_net.load_state_dict(
@@ -172,7 +172,7 @@ def train(args):
         print("[Train] Starting fresh training (use --resume to continue).")
 
     os.makedirs("logs", exist_ok=True)
-    log_path = os.path.join("logs", "gomoku_training_log.csv")
+    log_path = os.path.join("logs", "training_log.csv")
     if args.resume and os.path.exists(log_path):
         csv_file = open(log_path, "a", newline="")
         writer   = csv.writer(csv_file)

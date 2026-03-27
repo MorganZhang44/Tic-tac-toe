@@ -23,12 +23,12 @@ Usage:
 import os
 import numpy as np
 
-from gomoku.dqn_agent_gomoku import GomokuDQNAgent
+from core.dqn_agent_gomoku import GomokuDQNAgent
 
 # ── Global model (loaded once) ────────────────────────────────────────
 _agent: GomokuDQNAgent = None
 _WEIGHTS_PATH = os.path.join(os.path.dirname(__file__),
-                              "weights", "gomoku_weights.pth")
+                              "weights", "model_weights.pth")
 
 
 def _load_agent():

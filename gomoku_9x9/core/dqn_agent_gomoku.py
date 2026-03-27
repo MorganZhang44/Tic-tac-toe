@@ -18,7 +18,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.cuda.amp import GradScaler, autocast
 
-from gomoku.network_gomoku import DuelingGomokuNet
+from core.network_gomoku import DuelingGomokuNet
 
 # Reuse the existing replay buffer from the base project
 import sys

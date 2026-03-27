@@ -21,8 +21,8 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 import numpy as np
 
-from gomoku.gomoku9x9 import Gomoku9x9
-from gomoku.dqn_agent_gomoku import GomokuDQNAgent
+from core.gomoku9x9 import Gomoku9x9
+from core.dqn_agent_gomoku import GomokuDQNAgent
 
 # ── Colour palette ─────────────────────────────────────────────────────
 BG          = (26, 26, 46)     # #1a1a2e dark navy background
@@ -298,7 +298,7 @@ def main():
     args = parser.parse_args()
 
     agent = GomokuDQNAgent()
-    weights_path = os.path.join("weights", "gomoku_weights.pth")
+    weights_path = os.path.join("weights", "model_weights.pth")
     if os.path.exists(weights_path):
         agent.load(weights_path)
         agent.policy_net.eval()

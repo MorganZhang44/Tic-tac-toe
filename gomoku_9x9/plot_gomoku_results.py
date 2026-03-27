@@ -1,5 +1,5 @@
 ﻿"""
-Plot training curves from logs/gomoku_training_log.csv.
+Plot training curves from logs/training_log.csv.
 Generates PNG plots saved to logs/.
 
 Usage:
@@ -12,7 +12,7 @@ import csv
 import numpy as np
 
 
-def load_log(path="logs/gomoku_training_log.csv"):
+def load_log(path="logs/training_log.csv"):
     episodes, epsilons, losses, win_rates = [], [], [], []
     with open(path, newline="") as f:
         reader = csv.DictReader(f)
@@ -39,7 +39,7 @@ def smooth(values, window=20):
 
 
 def main():
-    log_path = "logs/gomoku_training_log.csv"
+    log_path = "logs/training_log.csv"
     if not os.path.exists(log_path):
         print(f"[ERROR] Log file not found: {log_path}")
         print("  → Run train_gomoku.py first, then re-run this script.")
@@ -93,7 +93,7 @@ def main():
     ax.grid(alpha=0.3)
 
     plt.tight_layout()
-    out_path = "logs/gomoku_training_curves.png"
+    out_path = "logs/training_curves.png"
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     print(f"[Plot] Saved → {out_path}")
     plt.close()

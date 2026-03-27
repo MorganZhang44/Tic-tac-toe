@@ -8,15 +8,15 @@ Evaluates the trained Gomoku agent against:
 Usage:
     python evaluate_gomoku.py
     python evaluate_gomoku.py --games 500
-    python evaluate_gomoku.py --weights weights/gomoku_weights.pth
+    python evaluate_gomoku.py --weights weights/model_weights.pth
 """
 
 import argparse
 import os
 import numpy as np
 
-from gomoku.gomoku9x9 import Gomoku9x9, RandomAgent
-from gomoku.dqn_agent_gomoku import GomokuDQNAgent
+from core.gomoku9x9 import Gomoku9x9, RandomAgent
+from core.dqn_agent_gomoku import GomokuDQNAgent
 
 
 def run_match(agent_a: GomokuDQNAgent, agent_b, n_games: int,
@@ -117,5 +117,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate Gomoku DQN agent")
     parser.add_argument("--games",   type=int, default=500)
     parser.add_argument("--weights", type=str,
-                        default=os.path.join("weights", "gomoku_weights.pth"))
+                        default=os.path.join("weights", "model_weights.pth"))
     main(parser.parse_args())
