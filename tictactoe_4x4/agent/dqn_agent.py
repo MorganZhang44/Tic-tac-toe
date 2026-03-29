@@ -40,6 +40,7 @@ class DQNAgent:
         self,
         board_size: int = 4,
         action_size: int = 16,
+        network_class=None,
         lr: float = 5e-5,
         gamma: float = 0.95,
         epsilon_start: float = 1.0,
@@ -67,8 +68,13 @@ class DQNAgent:
             self.device = torch.device(device)
 
         # Networks
-        self.policy_net = DuelingConnectNet(board_size, action_size).to(self.device)
-        self.target_net = DuelingConnectNet(board_size, action_size).to(self.device)
+        if network_class is None:
+            # Fallback for older code
+            from agent.network import DuelingConnectNet
+            network_class = DuelingConnectNet
+
+        self.policy_net = network_class(board_size, action_size).to(self.device)
+        self.target_net = network_class(board_size, action_size).to(self.device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.target_net.eval()
 

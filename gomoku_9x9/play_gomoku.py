@@ -1,48 +1,41 @@
-﻿"""
-Interactive 9×9 Gomoku — Human vs AI (Pygame UI)
-======================================================
-Play against the trained DQN agent in a visual interface.
-
-Usage:
-    python play_gomoku.py              # You play as X (first), AI plays as O
-    python play_gomoku.py --ai-first   # AI goes first, you play as O
-    python play_gomoku.py --ai-vs-ai   # Watch the AI play itself
-
-Requirements: pygame
-"""
-
-import argparse
-import os
-import sys
 import time
-
-# Hide the pygame welcome message
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import argparse
+import sys
+import os
 import pygame
 import numpy as np
 
-from core.gomoku9x9 import Gomoku9x9
-from core.dqn_agent_gomoku import GomokuDQNAgent
+from models.common.env import Gomoku9x9
+from models.cnn_standard.agent import GomokuDQNAgent
+from models.cnn_standard.network import DuelingGomokuNet
 
 # ── Colour palette ─────────────────────────────────────────────────────
 BG          = (26, 26, 46)     # #1a1a2e dark navy background
-PANEL_BG    = (22, 33, 62)     # #16213e
-CELL_EMPTY  = (15, 52, 96)     # #0f3460 dark blue cell
-CELL_X      = (233, 69, 96)    # #e94560 vivid pink-red (human / X)
-CELL_O      = (83, 216, 251)   # #53d8fb cyan (AI / O)
-CELL_HOVER  = (26, 74, 122)    # #1a4a7a hover
-WIN_FLASH   = (245, 166, 35)   # #f5a623 golden flash
-TEXT_LIGHT  = (224, 224, 224)
+PANEL_BG    = (22, 33, 62)     # #16213e slightly lighter panel
+CELL_EMPTY  = (15, 52, 96)     # #0f3460 cell fill
+CELL_HOVER  = (20, 70, 120)    # hover state
+CELL_X      = (233, 69, 96)    # #e94560 Player 1 (X)
+CELL_O      = (242, 169, 0)    # #f2a900 Player -1 (O)
+WIN_FLASH   = (50, 205, 50)    # lime green for winning pieces 
+TEXT_LIGHT  = (230, 230, 250)
 TEXT_DIM    = (122, 122, 154)
 
 # ── Metrics ────────────────────────────────────────────────────────────
-BOARD = 9
-CELL_SIZE = 60
+ROWS = 9
+COLS = 9
+SQUARE_SIZE = 80
+LINE_WIDTH = 2
 PAD = 20
 INFO_H = 100
 BOTTOM_H = 80
-W = BOARD * CELL_SIZE + 2 * PAD
-H = INFO_H + BOARD * CELL_SIZE + 2 * PAD + BOTTOM_H
+W = COLS * SQUARE_SIZE + 2 * PAD
+H = INFO_H + ROWS * SQUARE_SIZE + 2 * PAD + BOTTOM_H
+
+# Colors for drawing
+BG_COLOR = BG
+GRID_COLOR = TEXT_DIM
+PLAYER1_COLOR = (0, 0, 0) # Black stone
+PLAYER2_COLOR = (255, 255, 255) # White stone
 
 
 class GameUI:
@@ -67,7 +60,7 @@ class GameUI:
         self.font_title  = pygame.font.SysFont("helvetica", 32, bold=True)
         self.font_status = pygame.font.SysFont("helvetica", 24)
         self.font_score  = pygame.font.SysFont("helvetica", 20)
-        self.font_piece  = pygame.font.SysFont("helvetica", 40, bold=True)
+        self.font_piece  = pygame.font.SysFont("helvetica", 80, bold=True)
         self.font_btn    = pygame.font.SysFont("helvetica", 24, bold=True)
 
         self.status_msg = "Your turn! Click a cell to play." if not ai_vs_ai else "AI vs AI mode"
@@ -100,51 +93,37 @@ class GameUI:
 
         # ── Board ─────────────────────────────────────────────────────
         mx, my = mouse_pos
-        for r in range(BOARD):
-            for c in range(BOARD):
-                x0 = PAD + c * CELL_SIZE
-                y0 = INFO_H + PAD + r * CELL_SIZE
-                rect = pygame.Rect(x0, y0, CELL_SIZE, CELL_SIZE)
+        
+        # Draw grid lines
+        for i in range(ROWS + 1):
+            pygame.draw.line(self.screen, GRID_COLOR, (PAD, INFO_H + PAD + i * SQUARE_SIZE), (PAD + COLS * SQUARE_SIZE, INFO_H + PAD + i * SQUARE_SIZE), LINE_WIDTH)
+        for i in range(COLS + 1):
+            pygame.draw.line(self.screen, GRID_COLOR, (PAD + i * SQUARE_SIZE, INFO_H + PAD), (PAD + i * SQUARE_SIZE, INFO_H + PAD + ROWS * SQUARE_SIZE), LINE_WIDTH)
+
+        for r in range(ROWS):
+            for c in range(COLS):
+                x0 = PAD + c * SQUARE_SIZE
+                y0 = INFO_H + PAD + r * SQUARE_SIZE
+                rect = pygame.Rect(x0, y0, SQUARE_SIZE, SQUARE_SIZE)
 
                 is_win = (r, c) in self.winning_cells
-
-                # Board cell inner rect
-                margin = 4
-                inner_rect = pygame.Rect(x0 + margin, y0 + margin, 
-                                         CELL_SIZE - 2*margin, CELL_SIZE - 2*margin)
-
                 val = self.env.board[r, c]
+                center = (x0 + SQUARE_SIZE // 2, y0 + SQUARE_SIZE // 2)
 
                 if is_win and self.flash_state:
-                    color = WIN_FLASH
-                elif val == 1:
-                    color = CELL_X
-                elif val == -1:
-                    color = CELL_O
-                elif not self.game_over and inner_rect.collidepoint(mx, my):
-                    color = CELL_HOVER
-                else:
-                    color = CELL_EMPTY
+                    pygame.draw.circle(self.screen, WIN_FLASH, center, SQUARE_SIZE // 2 - 2)
 
-                pygame.draw.rect(self.screen, color, inner_rect, border_radius=6)
+                # Need a hover effect for empty grids
+                if val == 0 and not self.game_over and rect.collidepoint(mx, my):
+                    pygame.draw.circle(self.screen, CELL_HOVER, center, SQUARE_SIZE // 2 - 8)
 
                 # Draw pieces
+                radius = SQUARE_SIZE // 2 - 6
                 if val == 1:
-                    piece = self.font_piece.render("X", True, (255, 255, 255))
-                    self.screen.blit(piece, (x0 + CELL_SIZE//2 - piece.get_width()//2,
-                                             y0 + CELL_SIZE//2 - piece.get_height()//2 + 2))
+                    pygame.draw.circle(self.screen, PLAYER1_COLOR, center, radius)
                 elif val == -1:
-                    piece = self.font_piece.render("O", True, PANEL_BG)
-                    self.screen.blit(piece, (x0 + CELL_SIZE//2 - piece.get_width()//2,
-                                             y0 + CELL_SIZE//2 - piece.get_height()//2 + 2))
-                elif not self.game_over and inner_rect.collidepoint(mx, my) and not self.ai_vs_ai:
-                    if self.env.current_player == self.human_player:
-                        sym = "X" if self.human_player == 1 else "O"
-                        text_col = (255, 255, 255, 128) if self.human_player == 1 else (*PANEL_BG, 128)
-                        piece = self.font_piece.render(sym, True, text_col)
-                        piece.set_alpha(100) # Ghost effect
-                        self.screen.blit(piece, (x0 + CELL_SIZE//2 - piece.get_width()//2,
-                                                 y0 + CELL_SIZE//2 - piece.get_height()//2 + 2))
+                    pygame.draw.circle(self.screen, PLAYER2_COLOR, center, radius)
+                    pygame.draw.circle(self.screen, (0,0,0), center, radius, 2) # outline for white
 
         # ── Bottom Buttons ────────────────────────────────────────────
         ng_color = CELL_X if self.new_game_rect.collidepoint(mx, my) else (200, 50, 80)
@@ -178,12 +157,12 @@ class GameUI:
         if self.env.current_player != self.human_player:
             return
 
-        for r in range(BOARD):
-            for c in range(BOARD):
-                x0 = PAD + c * CELL_SIZE
-                y0 = INFO_H + PAD + r * CELL_SIZE
-                if pygame.Rect(x0, y0, CELL_SIZE, CELL_SIZE).collidepoint(mx, my):
-                    action = r * BOARD + c
+        for r in range(ROWS):
+            for c in range(COLS):
+                x0 = PAD + c * SQUARE_SIZE
+                y0 = INFO_H + PAD + r * SQUARE_SIZE
+                if pygame.Rect(x0, y0, SQUARE_SIZE, SQUARE_SIZE).collidepoint(mx, my):
+                    action = r * COLS + c
                     if action in self.env.get_valid_moves():
                         self.apply_move(action, is_human=True)
                     return
@@ -215,13 +194,7 @@ class GameUI:
         player = self.env.current_player
         mask = self.env.get_valid_mask()
         state = self.env.get_state_for_player(player)
-        
-        # We need to pass a board where 1 is current player and -1 is opponent
-        # self.env.board uses 1 for X and -1 for O. Multiply by player to normalize.
-        board_for_predict = self.env.board * player
-        r, c = self.agent.predict(board_for_predict)
-        action = r * BOARD + c
-        
+        action = self.agent.select_action(state, mask, greedy=True)
         self.apply_move(action, is_human=False)
 
     def reset_game(self):
@@ -237,77 +210,84 @@ class GameUI:
             self.status_msg = "Your turn! Click a cell to play."
 
     def find_winning_cells(self):
+        if self.winner in (0, None):
+            return set()
+        
         b = self.env.board
-        n = BOARD
-        w = 5  # Gomoku needs 5 in a row
-        for player in [1, -1]:
-            for r in range(n):
-                for c in range(n - w + 1):
-                    if all(b[r, c+k] == player for k in range(w)): return {(r, c+k) for k in range(w)}
-            for r in range(n - w + 1):
-                for c in range(n):
-                    if all(b[r+k, c] == player for k in range(w)): return {(r+k, c) for k in range(w)}
-            for r in range(n - w + 1):
-                for c in range(n - w + 1):
-                    if all(b[r+k, c+k] == player for k in range(w)): return {(r+k, c+k) for k in range(w)}
-            for r in range(n - w + 1):
-                for c in range(w - 1, n):
-                    if all(b[r+k, c-k] == player for k in range(w)): return {(r+k, c-k) for k in range(w)}
-        return set()
+        w = 5  # Gomoku is 5-in-a-row
+        cells = set()
+        
+        # Horiz
+        for r in range(ROWS):
+            for c in range(COLS - w + 1):
+                if all(b[r, c+k] == self.winner for k in range(w)):
+                    for k in range(w): cells.add((r, c+k))
+        # Vert
+        for r in range(ROWS - w + 1):
+            for c in range(COLS):
+                if all(b[r+k, c] == self.winner for k in range(w)):
+                    for k in range(w): cells.add((r+k, c))
+        # Diag ↘
+        for r in range(ROWS - w + 1):
+            for c in range(COLS - w + 1):
+                if all(b[r+k, c+k] == self.winner for k in range(w)):
+                    for k in range(w): cells.add((r+k, c+k))
+        # Diag ↙
+        for r in range(ROWS - w + 1):
+            for c in range(w - 1, COLS):
+                if all(b[r+k, c-k] == self.winner for k in range(w)):
+                    for k in range(w): cells.add((r+k, c-k))
+                    
+        return cells
 
     def run(self):
         clock = pygame.time.Clock()
-        ai_timer = 0
-
         while True:
+            # Animation timer
+            now = time.time()
+            if now - self.last_update > 0.5:
+                self.flash_state = not self.flash_state
+                self.last_update = now
+
             mouse_pos = pygame.mouse.get_pos()
-            dt = time.time() - self.last_update
-            self.last_update = time.time()
-
-            # Handle flash animation
-            if self.game_over and self.winning_cells:
-                self.flash_timer += dt
-                if self.flash_timer > 0.3:
-                    self.flash_state = not self.flash_state
-                    self.flash_timer = 0
-
-            # Handle AI moves
-            if not self.game_over:
-                if (self.ai_vs_ai) or (self.env.current_player != self.human_player):
-                    ai_timer += dt
-                    if ai_timer > 0.5:  # 500ms delay for visual effect
-                        self.ai_move()
-                        ai_timer = 0
-                else:
-                    ai_timer = 0 # reset timer if it's human's turn
-
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     self.handle_click(mouse_pos)
 
             self.draw(mouse_pos)
+
+            # AI move logic
+            if not self.game_over:
+                if self.ai_vs_ai or self.env.current_player != self.human_player:
+                    pygame.display.flip()  # Ensure status message updates before freeze
+                    pygame.time.delay(500) # Give human a chance to see the move
+                    self.ai_move()
+
             clock.tick(60)
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Play 9×9 Gomoku against the trained DQN agent")
-    parser.add_argument("--ai-first", action="store_true", help="AI goes first (plays as X), you play as O")
-    parser.add_argument("--ai-vs-ai", action="store_true", help="Watch the AI play against itself")
+    parser = argparse.ArgumentParser("Play COMP0215 Gomoku AI")
+    parser.add_argument("--ai_first", action="store_true", help="AI plays as X (first)")
+    parser.add_argument("--ai_vs_ai", action="store_true", help="Watch two AI instances battle")
     args = parser.parse_args()
 
-    agent = GomokuDQNAgent()
-    weights_path = os.path.join("weights", "model_weights.pth")
-    if os.path.exists(weights_path):
-        agent.load(weights_path)
-        agent.policy_net.eval()
-        print(f"[UI] Loaded weights from {weights_path}")
-    else:
-        print(f"[UI] WARNING: No weights found at '{weights_path}'. Playing randomly.")
+    weights_path = os.path.join(os.path.dirname(__file__), "models", "cnn_standard", "weights.pth")
+    if not os.path.exists(weights_path):
+        print(f"Error: No weights found at {weights_path}")
+        print("Please train the Gomoku agent first!")
+        sys.exit(1)
+
+    agent = GomokuDQNAgent(board_size=9, action_size=81)
+    agent.load(weights_path)
+    agent.epsilon = 0.0  # Greedy strictly
 
     human_player = -1 if args.ai_first else 1
-    ui = GameUI(agent, human_player, args.ai_vs_ai)
+    ui = GameUI(agent, human_player=human_player, ai_vs_ai=args.ai_vs_ai)
     ui.run()
 
 if __name__ == "__main__":

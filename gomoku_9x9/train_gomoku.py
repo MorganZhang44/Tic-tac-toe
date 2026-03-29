@@ -1,4 +1,4 @@
-﻿"""
+"""
 Training Script — Self-Play DQN for 9x9 Gomoku
 ================================================
 Trains a DQN agent via a progressive curriculum:
@@ -21,8 +21,8 @@ import time
 import numpy as np
 import torch
 
-from core.gomoku9x9 import Gomoku9x9, RandomAgent, SmartAgent
-from core.dqn_agent_gomoku import GomokuDQNAgent
+from models.common.env import Gomoku9x9, RandomAgent, SmartAgent
+from models.cnn_standard.agent import GomokuDQNAgent
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -159,7 +159,7 @@ def train(args):
     agent1 = GomokuDQNAgent()
     agent2 = GomokuDQNAgent()   # frozen opponent
 
-    weights_path = os.path.join("weights", "model_weights.pth")
+    weights_path = os.path.join("models", "cnn_standard", "weights.pth")
     if args.resume and os.path.exists(weights_path):
         agent1.load(weights_path)
         agent2.policy_net.load_state_dict(

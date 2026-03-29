@@ -1,4 +1,4 @@
-﻿"""
+"""
 predict_gomoku.py — Coursework-Required Prediction API (Gomoku)
 ================================================================
 Exposes the clean interface required by the coursework spec:
@@ -23,12 +23,12 @@ Usage:
 import os
 import numpy as np
 
-from core.dqn_agent_gomoku import GomokuDQNAgent
+from models.cnn_standard.agent import GomokuDQNAgent
 
 # ── Global model (loaded once) ────────────────────────────────────────
 _agent: GomokuDQNAgent = None
 _WEIGHTS_PATH = os.path.join(os.path.dirname(__file__),
-                              "weights", "model_weights.pth")
+                              "models", "cnn_standard", "weights.pth")
 
 
 def _load_agent():
