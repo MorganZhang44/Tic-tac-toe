@@ -6,8 +6,8 @@ import pygame
 import numpy as np
 
 from models.common.env import Gomoku9x9
-from models.cnn_standard.agent import GomokuDQNAgent
-from models.cnn_standard.network import DuelingGomokuNet
+from models.cnn_standard.agent import GomokuDQNAgent as StandardAgent
+from models.cnn_resnet.agent import GomokuDQNAgent as ResNetAgent
 
 # ── Colour palette ─────────────────────────────────────────────────────
 BG          = (26, 26, 46)     # #1a1a2e dark navy background
@@ -39,14 +39,16 @@ PLAYER2_COLOR = (255, 255, 255) # White stone
 
 
 class GameUI:
-    def __init__(self, agent: GomokuDQNAgent, human_player: int, ai_vs_ai: bool):
+    def __init__(self, agent1, agent2, human_player: int, ai_vs_ai: bool, battle_mode: bool = False):
         pygame.init()
         self.screen = pygame.display.set_mode((W, H))
-        pygame.display.set_caption("9×9 Gomoku | Human vs AI")
+        pygame.display.set_caption("9×9 Gomoku | AI Battle Mode" if battle_mode else "9×9 Gomoku | Human vs AI")
 
-        self.agent = agent
+        self.agent1 = agent1
+        self.agent2 = agent2 # Can be same as agent1
         self.human_player = human_player
         self.ai_vs_ai = ai_vs_ai
+        self.battle_mode = battle_mode
 
         self.env = Gomoku9x9()
         self.board_state = self.env.reset()
@@ -64,7 +66,9 @@ class GameUI:
         self.font_btn    = pygame.font.SysFont("helvetica", 24, bold=True)
 
         self.status_msg = "Your turn! Click a cell to play." if not ai_vs_ai else "AI vs AI mode"
-        if not ai_vs_ai and self.env.current_player != self.human_player:
+        if battle_mode:
+            self.status_msg = "⚔️ Battle Mode: Standard vs ResNet"
+        elif not ai_vs_ai and self.env.current_player != self.human_player:
             self.status_msg = "🤖 AI is thinking..."
 
         # Flash animation
@@ -194,7 +198,19 @@ class GameUI:
         player = self.env.current_player
         mask = self.env.get_valid_mask()
         state = self.env.get_state_for_player(player)
-        action = self.agent.select_action(state, mask, greedy=True)
+        
+        # Decide which agent is thinking
+        if self.battle_mode:
+            if player == 1:
+                self.status_msg = "🤖 [Black] Standard CNN thinking..."
+                current_agent = self.agent1
+            else:
+                self.status_msg = "🤖 [White] ResNet CNN thinking..."
+                current_agent = self.agent2
+        else:
+            current_agent = self.agent1
+            
+        action = current_agent.select_action(state, mask, greedy=True)
         self.apply_move(action, is_human=False)
 
     def reset_game(self):
@@ -202,7 +218,9 @@ class GameUI:
         self.game_over = False
         self.winner = None
         self.winning_cells = set()
-        if self.ai_vs_ai:
+        if self.battle_mode:
+            self.status_msg = "⚔️ Battle: Standard (Black) vs ResNet (White)"
+        elif self.ai_vs_ai:
             self.status_msg = "🤖 AI vs AI — watching self-play..."
         elif self.env.current_player != self.human_player:
             self.status_msg = "🤖 AI is thinking..."
@@ -274,20 +292,53 @@ def main():
     parser = argparse.ArgumentParser("Play COMP0215 Gomoku AI")
     parser.add_argument("--ai_first", action="store_true", help="AI plays as X (first)")
     parser.add_argument("--ai_vs_ai", action="store_true", help="Watch two AI instances battle")
+    parser.add_argument("--battle", action="store_true", help="Battle Mode: Standard CNN vs ResNet CNN")
+    parser.add_argument("--resnet", action="store_true", help="Use the 28MB ResNet model for Human vs AI")
     args = parser.parse_args()
 
-    weights_path = os.path.join(os.path.dirname(__file__), "models", "cnn_standard", "weights.pth")
-    if not os.path.exists(weights_path):
-        print(f"Error: No weights found at {weights_path}")
-        print("Please train the Gomoku agent first!")
-        sys.exit(1)
+    # Paths
+    std_weights = os.path.join(os.path.dirname(__file__), "models", "cnn_standard", "weights.pth")
+    res_weights = os.path.join(os.path.dirname(__file__), "models", "cnn_resnet", "weights.pth")
 
-    agent = GomokuDQNAgent(board_size=9, action_size=81)
-    agent.load(weights_path)
-    agent.epsilon = 0.0  # Greedy strictly
+    if args.battle:
+        print("[Battle Mode] Loading two different AI architectures...")
+        # 1. Standard CNN
+        agent1 = StandardAgent(board_size=9, action_size=81)
+        agent1.load(std_weights)
+        agent1.epsilon = 0.0
+        
+        # 2. ResNet
+        agent2 = ResNetAgent(board_size=9, action_size=81, channels=128, num_res_blocks=6)
+        agent2.load(res_weights)
+        agent2.epsilon = 0.0
+        
+        ui = GameUI(agent1, agent2, human_player=None, ai_vs_ai=True, battle_mode=True)
+    elif args.resnet:
+        print("[Mode] Playing against 28MB ResNet CNN...")
+        if not os.path.exists(res_weights):
+            print(f"Error: No weights found at {res_weights}")
+            sys.exit(1)
+            
+        agent = ResNetAgent(board_size=9, action_size=81, channels=128, num_res_blocks=6)
+        agent.load(res_weights)
+        agent.epsilon = 0.0
+        
+        human_player = -1 if args.ai_first else 1
+        ui = GameUI(agent, agent, human_player=human_player, ai_vs_ai=args.ai_vs_ai)
+    else:
+        # Standard mode
+        if not os.path.exists(std_weights):
+            print(f"Error: No weights found at {std_weights}")
+            print("Please train the Gomoku agent first!")
+            sys.exit(1)
 
-    human_player = -1 if args.ai_first else 1
-    ui = GameUI(agent, human_player=human_player, ai_vs_ai=args.ai_vs_ai)
+        agent = StandardAgent(board_size=9, action_size=81)
+        agent.load(std_weights)
+        agent.epsilon = 0.0
+        
+        human_player = -1 if args.ai_first else 1
+        ui = GameUI(agent, agent, human_player=human_player, ai_vs_ai=args.ai_vs_ai)
+    
     ui.run()
 
 if __name__ == "__main__":

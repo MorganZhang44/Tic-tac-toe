@@ -47,18 +47,25 @@ pip install torch numpy pygame pytest matplotlib
 
 ---
 
-## 🎮 Play Gomoku Against AI (GUI)
-The highlight of this repository is the interactive **Pygame GUI** built for Gomoku. The V3 AI integrates a CNN intuition engine with strict `Radius-1` proximity algorithms and a definitive 1-ply MCTS "Double-Threat Search" to completely intercept all immediate human tactics.
+## 🎮 Interactive Play Modes (GUI)
 
-```bash
-cd gomoku_9x9
+This repository provides highly interactive Pygame UIs for both games, featuring multiple AI architectures and battle modes.
 
-# Play as Black (Human goes first)
-python play_gomoku.py
+### 1. Gomoku 9×9 — Three Advanced Modes
+Navigate to `gomoku_9x9/` and choose your challenge:
 
-# Play as White (AI goes first)
-python play_gomoku.py --ai-first
-```
+| Mode | Command | Description |
+| :--- | :--- | :--- |
+| **🥇 Standard CNN** | `python3 play_gomoku.py` | Challenge our strongest 85MB model (Dueling DQN + 4 ResBlocks). |
+| **🥈 ResNet Lite** | `python3 play_gomoku.py --resnet` | Faster, lightweight 28MB model with specialized residual skip connections. |
+| **⚔️ Battle Mode** | `python3 play_gomoku.py --battle` | **Recommended!** Watch the 85MB Standard CNN vs. 28MB ResNet in a direct duel. |
+
+*   **Options**: Add `--ai_first` to let the AI take the first move (Black), or `--ai_vs_ai` (non-battle) to watch self-play.
+
+### 2. Tic-tac-toe 4×4
+Navigate to `tictactoe_4x4/` and run:
+*   **Human vs AI**: `python3 play.py`
+*   **AI Auto-play**: `python3 play.py --ai-vs-ai`
 
 ---
 
